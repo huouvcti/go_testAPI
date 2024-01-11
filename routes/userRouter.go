@@ -1,19 +1,19 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
-
 	"testAPI/controllers"
+
+	"github.com/gin-gonic/gin"
 )
 
-func UserRouter(r *gin.Engine) {
+func UserRouter(r *gin.RouterGroup) {
 
-	userController := controllers.User{}
+	var userController controllers.UserInterface = &controllers.UserController{}
 
 	userGroup := r.Group("/user")
 	{
 		userGroup.GET("/", userController.GetUser)
 
-		userGroup.GET("/aaa", userController.GetAAA)
+		userGroup.POST("/join", userController.Join)
 	}
 }

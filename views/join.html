@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hello</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        
+        <script>
+            function joinSubmit() {
+                const formData = {
+                    id: document.getElementById("id").value,
+                    pw: document.getElementById("pw").value,
+                    pwCheck: document.getElementById("pwCheck").value,
+                    name: document.getElementById("name").value
+                }
+
+                if(!formData.id){
+                    alert("아이디 미입력")
+                } else if(!formData.pw){
+                    alert("패스워드 미입력")
+                } else if(formData.pw != formData.pwCheck){
+                    alert("패스워드가 일치하지 않음")
+                } else if(!formData.name) {
+                    alert("이름 미입력")
+                } else {
+                    delete formData.pwCheck
+                    $.ajax({
+                        type: 'POST',
+                        url: '/api/v1/user/join',
+                        data: formData,
+                        success: function (response) {
+                            console.log(response)
+                        }
+                    })
+                }
+
+                
+            }
+        </script>
+    </head>
+
+    <body>
+        <h1>회원가입</h1>
+
+        <form action="" onsubmit="return false">
+            <input type="text" id="id" placeholder="id">
+            <input type="password" id="pw" placeholder="pw">
+            <input type="password" id="pwCheck" placeholder="pwCheck">
+            <input type="text" id="name" placeholder="name">
+
+
+            <button onClick="joinSubmit()">회원가입</button>
+        </form>
+    </body>
+</html>

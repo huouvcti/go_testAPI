@@ -1,13 +1,23 @@
 package controllers
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+
 	"github.com/gin-gonic/gin"
 )
 
-type User struct {
+type UserInterface interface {
+	GetUser(c *gin.Context)
+
+	Join(c *gin.Context)
 }
 
-func (user User) GetUser(c *gin.Context) {
+type UserController struct {
+}
+
+func (user *UserController) GetUser(c *gin.Context) {
 	data := make(map[string]interface{})
 
 	data["name"] = "kim"
@@ -16,11 +26,18 @@ func (user User) GetUser(c *gin.Context) {
 	c.JSON(200, data)
 }
 
-func (user User) GetAAA(c *gin.Context) {
-	data := make(map[string]interface{})
+func (user *UserController) Join(c *gin.Context) {
+	body := c.Request.Body
 
-	data["name"] = "AAA"
-	data["age"] = 0
+	value, err := ioutil.ReadAll(body)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	var data map[string]interface{}
+	json.Unmarshal(value, &data)
+
+	fmt.Println(value)
 
 	c.JSON(200, data)
 }
