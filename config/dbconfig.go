@@ -11,9 +11,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type DBORM struct {
-	*gorm.DB
-}
+var DB *gorm.DB
 
 func ConnDB() *gorm.DB {
 	err := godotenv.Load(".env")
@@ -30,7 +28,7 @@ func ConnDB() *gorm.DB {
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_NAME"))
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	DB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal("데이터베이스 연결 실패:", err)
@@ -38,11 +36,11 @@ func ConnDB() *gorm.DB {
 
 	// 연결 테스트
 	var result int
-	db.Raw("SELECT 1").Scan(&result)
+	DB.Raw("SELECT 1").Scan(&result)
 
 	if result == 1 {
 		log.Println("데이터베이스 연결 성공")
 	}
 
-	return db
+	return DB
 }

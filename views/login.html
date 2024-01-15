@@ -4,14 +4,62 @@
         <title>Hello</title>
     </head>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+        const setCookie = (name, value, exp) => {
+            const date = new Date();
+            date.setTime(date.getTime() + exp*24*60*60*1000);
+            document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';
+        }
+
+        function login() {
+            const formData = {
+                id: document.getElementById("id").value,
+                pw: document.getElementById("pw").value,
+            }
+
+            if(!formData.id){
+                alert("아이디 미입력")
+            } else if(!formData.pw){
+                alert("패스워드 미입력")
+            } else {
+                delete formData.pwCheck
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/v1/user/login',
+                    data: JSON.stringify(formData),
+                    dataType: "JSON",
+                    success: function (res) {
+                        console.log(res)
+
+                        alert(res.msg)
+                        setCookie("id", res.data.ID, 1);
+                        setCookie("name", res.data.Name, 1);
+                        location.href = "/"
+                    },
+                    error: function (xhr) {
+                        var err = JSON.parse(xhr.responseText);
+                        console.log(err)
+
+                        alert(err.msg)
+                    }
+                })
+            }
+
+            
+        }
+    </script>
+
+
     <body>
         <h1>로그인</h1>
 
-        <form action="">
-            <input type="text" placeholder="id">
-            <input type="password" placeholder="pw">
+        <form action="" onsubmit="return false">
+            <input type="text" id="id" placeholder="id">
+            <input type="password" id="pw" placeholder="pw">
 
-            <button>로그인</button>
+            <button onClick="login()">로그인</button>
         </form>
     </body>
 </html>

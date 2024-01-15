@@ -2,14 +2,50 @@
 <html>
     <head>
         <title>Hello</title>
-
-
     </head>
 
-    <body>
-        <h1>Hello</h1>
+
+    <script>
+        const userInfo = {
+            id: "",
+            name: ""
+        }
+
+        const getCookie = (name) => {
+            const value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+            return value? value[2] : null;
+        }
+
+        const deleteCookie = (name) => {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+        }
+
+
+        const init = () => {
+            userInfo.id = getCookie("id")
+            userInfo.name = getCookie("name")
+            console.log(userInfo)
+
+            if(userInfo.name) {
+                document.getElementById("userName").innerText = ", "+userInfo.name;
+            }
+            
+        }
+
+        const logout = () => {
+            deleteCookie("id");
+            deleteCookie("name");
+            location.reload();
+        }
+    </script>
+
+    <body onload="init()">
+        <h1>Hello<span id="userName"></span></h1>
 
         <a href="/login">로그인</a>
         <a href="/join">회원가입</a>
+        
+        <button onClick="logout()">로그아웃</button>
+
     </body>
 </html>

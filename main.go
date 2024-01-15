@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"testAPI/DAO"
 	"testAPI/config"
 	"testAPI/routes"
 
@@ -23,6 +24,7 @@ func main() {
 
 	// DB 연결
 	db := config.ConnDB()
+	DAO.SetDAO(db)
 	config.SetORM(db)
 
 	r := gin.Default()

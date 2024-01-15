@@ -27,9 +27,19 @@
                     $.ajax({
                         type: 'POST',
                         url: '/api/v1/user/join',
-                        data: formData,
-                        success: function (response) {
-                            console.log(response)
+                        data: JSON.stringify(formData),
+                        dataType: "JSON",
+                        success: function (res) {
+                            console.log(res)
+
+                            alert(res.msg)
+                            location.href = "/"
+                        },
+                        error: function (xhr) {
+                            var err = JSON.parse(xhr.responseText);
+                            console.log(err)
+
+                            alert(err.message)
                         }
                     })
                 }

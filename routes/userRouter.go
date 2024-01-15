@@ -15,5 +15,7 @@ func UserRouter(r *gin.RouterGroup) {
 		userGroup.GET("/", userController.GetUser)
 
 		userGroup.POST("/join", userController.Join)
+
+		userGroup.POST("/login", userController.Login)
 	}
 }
