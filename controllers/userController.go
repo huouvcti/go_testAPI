@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"testAPI/models"
+	"testAPI/utils"
 
 	"testAPI/DAO"
 )
@@ -23,6 +24,7 @@ type UserController struct {
 }
 
 var userDAO = DAO.UserDAO{}
+var jwtUtil = utils.JwtUtil{}
 
 func (user *UserController) GetUser(c *gin.Context) {
 	data := make(map[string]interface{})
@@ -75,20 +77,31 @@ func (user *UserController) Login(c *gin.Context) {
 		return
 	}
 
-	err, id, pw := userDAO.LoginUser(loginReq.ID, loginReq.PW)
-	if err {
+	err, id, name := userDAO.LoginUser(loginReq.ID, loginReq.PW)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "아이디 또는 패스워드가 일치하지 않음"})
 		return
 	}
 
-	fmt.Println(id, pw)
+	/* JWT 사용 X
+
+	fmt.Println(id, name)
 
 	type Data struct {
 		ID   string
 		Name string
 	}
-
-	d := Data{id, pw}
+	d := Data{id, name}
 
 	c.JSON(200, gin.H{"msg": "로그인 성공", "data": d})
+
+	*/
+
+	token, err := jwtUtil.GenerateToken(id, name)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "토큰 생성 실패"})
+		return
+	}
+
+	c.JSON(200, gin.H{"msg": "로그인 성공", "token": token})
 }

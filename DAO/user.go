@@ -28,16 +28,16 @@ func (dao UserDAO) FindByID(id string) bool {
 	return true
 }
 
-func (dao UserDAO) LoginUser(id string, pw string) (bool, string, string) {
+func (dao UserDAO) LoginUser(id string, pw string) (error, string, string) {
 	fmt.Println("LoginUser")
 
 	var user models.User
 	result := DB.Where("ID = ? AND PW = ?", id, pw).First(&user)
 
 	if result.Error != nil {
-		return true, "", ""
+		return result.Error, "", ""
 	}
 
 	fmt.Println(user)
-	return false, user.ID, user.Name
+	return nil, user.ID, user.Name
 }
