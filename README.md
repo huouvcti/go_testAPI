@@ -32,6 +32,9 @@
 ### jwt 인증 구현
     라이브러리
         - github.com/dgrijalva/jwt-go
-    함수
+    함수 구현
         - GenerateToken()
         - VerifyToken()
+
+### 파일 업로드
+
