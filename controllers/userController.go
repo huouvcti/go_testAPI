@@ -23,8 +23,8 @@ type UserInterface interface {
 type UserController struct {
 }
 
-var userDAO = DAO.UserDAO{}
-var jwtUtil = utils.JwtUtil{}
+var userDAO = &DAO.UserDAO{}
+var jwtUtil = &utils.JwtUtil{}
 
 func (user *UserController) GetUser(c *gin.Context) {
 	data := make(map[string]interface{})

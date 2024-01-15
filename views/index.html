@@ -22,9 +22,16 @@
 
 
         const init = () => {
-            userInfo.id = getCookie("id")
-            userInfo.name = getCookie("name")
-            console.log(userInfo)
+            const token = getCookie("token")
+            
+            const payloadBase64 = token.split(".")[1];
+            const payload = JSON.parse(decodeURIComponent(escape(atob(payloadBase64))));
+
+            userInfo.id = payload.id;
+            userInfo.name = payload.name;
+            
+
+            console.log(payload)
 
             if(userInfo.name) {
                 document.getElementById("userName").innerText = ", "+userInfo.name;
@@ -33,8 +40,7 @@
         }
 
         const logout = () => {
-            deleteCookie("id");
-            deleteCookie("name");
+            deleteCookie("token");
             location.reload();
         }
     </script>

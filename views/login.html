@@ -34,8 +34,7 @@
                         console.log(res)
 
                         alert(res.msg)
-                        setCookie("id", res.data.ID, 1);
-                        setCookie("name", res.data.Name, 1);
+                        setCookie("token", res.token, 1);
                         location.href = "/"
                     },
                     error: function (xhr) {

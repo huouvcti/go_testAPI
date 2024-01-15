@@ -2,13 +2,13 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/joho/godotenv"
 )
-
-var secretKey = []byte(os.Getenv("SECRET_KEY"))
 
 type userToken struct {
 	ID   string `json:"id"`
@@ -19,7 +19,20 @@ type userToken struct {
 
 type JwtUtil struct{}
 
+func GetSecretKey() []byte {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	secretKey := []byte(os.Getenv("SECRET_KEY"))
+
+	return secretKey
+}
+
 func (jwtUtil *JwtUtil) GenerateToken(id string, name string) (string, error) {
+
+	fmt.Println("scKey: ", GetSecretKey())
 	claims := userToken{
 		ID:   id,
 		Name: name,
@@ -29,7 +42,7 @@ func (jwtUtil *JwtUtil) GenerateToken(id string, name string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(secretKey)
+	tokenString, err := token.SignedString(GetSecretKey())
 	if err != nil {
 		return "", err
 	}
@@ -42,7 +55,7 @@ func (jwtUtil *JwtUtil) VerifyToken(tokenString string) (*jwt.Token, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("올바르지 않은 토큰 알고리즘")
 		}
-		return secretKey, nil
+		return GetSecretKey(), nil
 	})
 
 	if err != nil {
